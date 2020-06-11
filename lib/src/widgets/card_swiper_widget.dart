@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:peliculas/src/models/pelicula_model.dart';
 
 class CardSwiperWidget extends StatelessWidget {
-  final List<dynamic> peliculas;
+  final List<Pelicula> peliculas;
   CardSwiperWidget({@required this.peliculas});
 
   @override
@@ -10,18 +11,30 @@ class CardSwiperWidget extends StatelessWidget {
     final _screeSize = MediaQuery.of(context).size;
 
     return Container(
-      padding: EdgeInsets.only(top: 10.0),
+      padding: EdgeInsets.only(top: 2.0),
       child: new Swiper(
         itemHeight: _screeSize.height * 0.5,
         itemWidth: _screeSize.width * 0.5,
         itemBuilder: (BuildContext context, int index) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: new Image.network(
-              "http://via.placeholder.com/350x150",
-              fit: BoxFit.cover,
-            ),
-          );
+          peliculas[index].uniqueId = "${peliculas[index].id}-tarjeta";
+          print(peliculas[index].uniqueId);
+          return
+          //  Hero(
+          //   tag: peliculas[index].uniqueId,
+          //   child: 
+            ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, 'detalle',
+                      arguments: peliculas[index]),
+                  child: FadeInImage(
+                    image: NetworkImage(peliculas[index].getPosterImage()),
+                    placeholder: AssetImage('assets/img/no-image.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                )
+                );
+       //   );
         },
         itemCount: 3,
         layout: SwiperLayout.STACK,
